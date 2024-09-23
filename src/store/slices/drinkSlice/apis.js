@@ -17,6 +17,22 @@ export const fetchRootBeers = createAsyncThunk(
   }
 );
 
+export const fetchDrinkById = createAsyncThunk(
+  "rootBeers/fetchDrinkById",
+  async (drinkId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/api/drinks/${drinkId}`
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Failed to fetch drink details"
+      );
+    }
+  }
+);
+
 export const addRootBeer = createAsyncThunk(
   "rootBeers/addRootBeer",
   async (newRootBeer, { rejectWithValue }) => {

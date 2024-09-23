@@ -15,7 +15,7 @@ import {
 } from "./styled";
 import { FaPlus, FaTimes } from "react-icons/fa";
 
-const RootBeerCard = ({ rootBeer, reviews, onAddReview }) => {
+const RootBeerCard = ({ rootBeer, reviews, onAddReview, onClick }) => {
   const [rating, setRating] = useState(0);
   const [description, setDescription] = useState("");
   const [isReviewOpen, setIsReviewOpen] = useState(false);
@@ -75,7 +75,7 @@ const RootBeerCard = ({ rootBeer, reviews, onAddReview }) => {
   return (
     <CardContainer>
       <CardImage src={imageUrl} alt={rootBeer.name} />
-      <CardTitle>{rootBeer.name}</CardTitle>
+      <CardTitle onClick={onClick}>{rootBeer.name}</CardTitle>
       <CardDescription>{rootBeer.description}</CardDescription>
       <CardDetails>Reviews: {rootBeer.reviewCount}</CardDetails>
       <CardDetails>

@@ -1,8 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchRootBeers, addRootBeer, addReview, fetchReviews } from "./apis";
+import {
+  fetchRootBeers,
+  addRootBeer,
+  addReview,
+  fetchReviews,
+  fetchDrinkById,
+} from "./apis";
 
 const initialState = {
   rootBeers: [],
+  drinkDetails: null,
   status: "idle",
   error: null,
   total: 0,
@@ -25,6 +32,18 @@ const rootBeerSlice = createSlice({
       .addCase(fetchRootBeers.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
+      })
+      .addCase(fetchDrinkById.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchDrinkById.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.drinkDetails = action.payload; // Store the fetched drink details
+      })
+      .addCase(fetchDrinkById.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+        state.drinkDetails = null; // Reset drink details on error
       })
       .addCase(addRootBeer.fulfilled, (state, action) => {
         state.rootBeers.push(action.payload);

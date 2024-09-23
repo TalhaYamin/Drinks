@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom"; // Add this for navigation
 import {
   getRootBeersError,
   getRootBeersStatus,
   getRootBeersTotal,
   selectAllRootBeers,
 } from "../../store/slices/drinkSlice/selector";
-import {
-  fetchRootBeers,
-  fetchReviews,
-  addReview,
-} from "../../store/slices/drinkSlice/apis";
+import { fetchRootBeers } from "../../store/slices/drinkSlice/apis";
 import RootBeerCard from "../rootBeerCard";
 import {
   GridContainer,
@@ -24,6 +21,7 @@ import {
 
 const RootBeersList = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Add this for navigation
   const rootBeers = useSelector(selectAllRootBeers);
   const rootBeersStatus = useSelector(getRootBeersStatus);
   const error = useSelector(getRootBeersError);
@@ -71,11 +69,10 @@ const RootBeersList = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
-  useEffect(() => {
-    rootBeers.forEach((rootBeer) => {
-      dispatch(fetchReviews({ drinkId: rootBeer.id }));
-    });
-  }, [dispatch, rootBeers]);
+  const handleClick = (drinkId) => {
+    navigate(`/drinks/${drinkId}`);
+    console.log(drinkId, "drisssssss");
+  };
 
   let content;
 
@@ -101,9 +98,7 @@ const RootBeersList = () => {
               key={rootBeer.id}
               rootBeer={rootBeer}
               reviews={rootBeer.reviews || []}
-              onAddReview={async (reviewData) => {
-                await dispatch(addReview({ drinkId: rootBeer.id, reviewData }));
-              }}
+              onClick={() => handleClick(rootBeer.id)}
             />
           ))}
         </GridContainer>
