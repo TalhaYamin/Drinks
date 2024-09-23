@@ -60,3 +60,29 @@ export const SearchInput = styled.input`
   margin-right: 10px;
   width: 200px;
 `;
+
+export const PaginationContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+`;
+
+export const PaginationButton = styled.button`
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 15px;
+  margin: 0 5px;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: #0056b3;
+  }
+`;

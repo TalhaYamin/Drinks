@@ -14,6 +14,8 @@ import {
   SearchInput,
   SearchButton,
   ResetButton,
+  PaginationContainer,
+  PaginationButton,
 } from "./styled";
 
 const RootBeersList = () => {
@@ -25,13 +27,24 @@ const RootBeersList = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [query, setQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
-    dispatch(fetchRootBeers({ offset: 0, length: 10, name: "" }));
-  }, [dispatch]);
+    dispatch(
+      fetchRootBeers({
+        offset: (currentPage - 1) * itemsPerPage,
+        length: itemsPerPage,
+        name: query,
+      })
+    );
+  }, [dispatch, currentPage, query]);
 
   const handleSearch = () => {
-    dispatch(fetchRootBeers({ offset: 0, length: 10, search: searchTerm }));
+    setCurrentPage(1);
+    dispatch(
+      fetchRootBeers({ offset: 0, length: itemsPerPage, name: searchTerm })
+    );
     setSearchTerm("");
   };
 
@@ -39,16 +52,19 @@ const RootBeersList = () => {
     setSearchTerm(e.target.value);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setQuery(searchTerm);
-    handleSearch();
-  };
-
   const handleReset = () => {
     setSearchTerm("");
     setQuery("");
-    dispatch(fetchRootBeers({ offset: 0, length: 10, name: "" }));
+    setCurrentPage(1);
+    dispatch(fetchRootBeers({ offset: 0, length: itemsPerPage, name: "" }));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
   let content;
@@ -66,14 +82,28 @@ const RootBeersList = () => {
             value={searchTerm}
             onChange={handleInputChange}
           />
-          <SearchButton onClick={handleSubmit}>Search</SearchButton>
-          <ResetButton onClick={handleReset}>Reset</ResetButton>{" "}
+          <SearchButton onClick={handleSearch}>Search</SearchButton>
+          <ResetButton onClick={handleReset}>Reset</ResetButton>
         </div>
         <GridContainer>
           {rootBeers?.map((rootBeer) => (
             <RootBeerCard key={rootBeer.id} rootBeer={rootBeer} />
           ))}
         </GridContainer>
+        <PaginationContainer>
+          <PaginationButton
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </PaginationButton>
+          <PaginationButton
+            onClick={handleNextPage}
+            disabled={rootBeers.length < itemsPerPage}
+          >
+            Next
+          </PaginationButton>
+        </PaginationContainer>
       </div>
     );
   } else if (rootBeersStatus === "failed") {

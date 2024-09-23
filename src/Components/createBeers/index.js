@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addRootBeer } from "../../store/slices/drinkSlice/apis";
+import { addRootBeer, uploadPicture } from "../../store/slices/drinkSlice/apis"; // Import uploadPicture
 import {
   AddButton,
   ModalContainer,
@@ -15,6 +15,7 @@ import {
 const CreateRootBeer = ({ onFormSubmit }) => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({ name: "", description: "" });
+  const [image, setImage] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
   const handleChange = (e) => {
@@ -24,11 +25,30 @@ const CreateRootBeer = ({ onFormSubmit }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(addRootBeer(formData));
-    setShowForm(false);
-    onFormSubmit();
+
+    try {
+      const resultAction = await dispatch(addRootBeer(formData));
+
+      if (addRootBeer.fulfilled.match(resultAction)) {
+        const { id: drinkId } = resultAction.payload;
+
+        if (image) {
+          const uploadData = { drinkId, image };
+          await dispatch(uploadPicture(uploadData));
+        }
+
+        setShowForm(false);
+        onFormSubmit();
+      }
+    } catch (error) {
+      console.error("Failed to create root beer or upload image:", error);
+    }
   };
 
   return (
@@ -63,6 +83,14 @@ const CreateRootBeer = ({ onFormSubmit }) => {
                     value={formData.description}
                     onChange={handleChange}
                     required
+                  />
+                </div>
+                <div>
+                  <FormLabel>Upload Image</FormLabel>
+                  <FormInput
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
                   />
                 </div>
                 <FormButton type="submit">Create</FormButton>

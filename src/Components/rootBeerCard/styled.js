@@ -10,16 +10,19 @@ export const CardContainer = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
+export const CardImage = styled.img`
+  width: 100%;
+  height: auto;
+`;
+
 export const CardTitle = styled.h3`
-  margin: 0 0 8px 0;
   font-size: 1.2em;
-  color: #333;
+  margin: 10px;
 `;
 
 export const CardDescription = styled.p`
-  margin: 0 0 8px 0;
   font-size: 1em;
-  color: #666;
+  margin: 10px;
 `;
 
 export const CardDetails = styled.p`
