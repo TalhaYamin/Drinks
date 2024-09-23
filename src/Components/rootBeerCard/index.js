@@ -11,11 +11,14 @@ import {
   SubmitButton,
   ReviewList,
   ReviewItem,
+  ToggleReviewButton,
 } from "./styled";
+import { FaPlus, FaTimes } from "react-icons/fa";
 
 const RootBeerCard = ({ rootBeer, reviews, onAddReview }) => {
   const [rating, setRating] = useState(0);
   const [description, setDescription] = useState("");
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
 
   const imageUrl =
     rootBeer.Pictures.length > 0
@@ -36,6 +39,7 @@ const RootBeerCard = ({ rootBeer, reviews, onAddReview }) => {
     onAddReview(reviewData);
     setDescription("");
     setRating(0);
+    setIsReviewOpen(false);
   };
 
   const renderStars = (averageRating) => {
@@ -64,6 +68,10 @@ const RootBeerCard = ({ rootBeer, reviews, onAddReview }) => {
     );
   };
 
+  const toggleReviewForm = () => {
+    setIsReviewOpen(!isReviewOpen);
+  };
+
   return (
     <CardContainer>
       <CardImage src={imageUrl} alt={rootBeer.name} />
@@ -77,27 +85,43 @@ const RootBeerCard = ({ rootBeer, reviews, onAddReview }) => {
           : "No rating"}
       </CardDetails>
 
-      <StarsContainer>
-        {[1, 2, 3, 4, 5].map((star) => (
-          <Star
-            key={star}
-            onClick={() => handleStarClick(star)}
-            isSelected={star <= rating}
-          >
-            ★
-          </Star>
-        ))}
-      </StarsContainer>
+      <ToggleReviewButton onClick={toggleReviewForm}>
+        {isReviewOpen ? (
+          <>
+            <FaTimes />
+          </>
+        ) : (
+          <>
+            <FaPlus /> AddReview
+          </>
+        )}
+      </ToggleReviewButton>
 
-      <ReviewForm onSubmit={handleSubmit}>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Write your review..."
-          style={{ width: "90%" }}
-        />
-        <SubmitButton type="submit">Submit Review</SubmitButton>
-      </ReviewForm>
+      {isReviewOpen && (
+        <>
+          <StarsContainer>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Star
+                key={star}
+                onClick={() => handleStarClick(star)}
+                isSelected={star <= rating}
+              >
+                ★
+              </Star>
+            ))}
+          </StarsContainer>
+
+          <ReviewForm onSubmit={handleSubmit}>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Write your review..."
+              style={{ width: "90%" }}
+            />
+            <SubmitButton type="submit">Submit Review</SubmitButton>
+          </ReviewForm>
+        </>
+      )}
 
       <ReviewList>
         {reviews?.map((review, index) => (

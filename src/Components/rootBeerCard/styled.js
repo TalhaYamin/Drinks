@@ -71,3 +71,16 @@ export const SubmitButton = styled.button`
     background-color: #0056b3;
   }
 `;
+
+export const ToggleReviewButton = styled.button`
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  color: #333;
+  margin: 10px 0;
+
+  &:hover {
+    color: #555;
+  }
+`;
