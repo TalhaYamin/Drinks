@@ -3,11 +3,10 @@ import axios from "axios";
 
 export const fetchRootBeers = createAsyncThunk(
   "rootBeers/fetchRootBeers",
-  async ({ offset = 0, length = 10 }, { rejectWithValue }) => {
-    console.log("BASE_URL:", process.env.REACT_APP_BASE_URL);
+  async ({ offset = 0, length = 10, search = "" }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/drinks?offset=${offset}&length=${length}`
+        `${process.env.REACT_APP_BASE_URL}/drinks?offset=${offset}&length=${length}&name=${search}`
       );
       return response.data;
     } catch (error) {
