@@ -6,7 +6,11 @@ import {
   getRootBeersTotal,
   selectAllRootBeers,
 } from "../../store/slices/drinkSlice/selector";
-import { fetchRootBeers } from "../../store/slices/drinkSlice/apis";
+import {
+  fetchRootBeers,
+  fetchReviews,
+  addReview,
+} from "../../store/slices/drinkSlice/apis";
 import RootBeerCard from "../rootBeerCard";
 import {
   GridContainer,
@@ -67,6 +71,12 @@ const RootBeersList = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
+  useEffect(() => {
+    rootBeers.forEach((rootBeer) => {
+      dispatch(fetchReviews({ drinkId: rootBeer.id }));
+    });
+  }, [dispatch, rootBeers]);
+
   let content;
 
   if (rootBeersStatus === "loading") {
@@ -87,7 +97,14 @@ const RootBeersList = () => {
         </div>
         <GridContainer>
           {rootBeers?.map((rootBeer) => (
-            <RootBeerCard key={rootBeer.id} rootBeer={rootBeer} />
+            <RootBeerCard
+              key={rootBeer.id}
+              rootBeer={rootBeer}
+              reviews={rootBeer.reviews || []}
+              onAddReview={async (reviewData) => {
+                await dispatch(addReview({ drinkId: rootBeer.id, reviewData }));
+              }}
+            />
           ))}
         </GridContainer>
         <PaginationContainer>

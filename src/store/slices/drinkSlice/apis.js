@@ -56,3 +56,32 @@ export const uploadPicture = createAsyncThunk(
     }
   }
 );
+
+export const fetchReviews = createAsyncThunk(
+  "rootBeers/fetchReviews",
+  async ({ drinkId, offset = 0, length = 10 }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/api/drinks/${drinkId}/reviews?offset=${offset}&length=${length}`
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to fetch reviews");
+    }
+  }
+);
+
+export const addReview = createAsyncThunk(
+  "rootBeers/addReview",
+  async ({ drinkId, reviewData }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/api/drinks/${drinkId}/reviews`,
+        reviewData
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to add review");
+    }
+  }
+);

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchRootBeers, addRootBeer } from "./apis";
+import { fetchRootBeers, addRootBeer, addReview, fetchReviews } from "./apis";
 
 const initialState = {
   rootBeers: [],
@@ -31,6 +31,31 @@ const rootBeerSlice = createSlice({
         state.total += 1;
       })
       .addCase(addRootBeer.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(addReview.fulfilled, (state, action) => {
+        const { drinkId, review } = action.payload;
+        const rootBeer = state.rootBeers.find((beer) => beer.id === drinkId);
+        if (rootBeer) {
+          rootBeer.reviewCount += 1;
+        }
+      })
+      .addCase(addReview.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(fetchReviews.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchReviews.fulfilled, (state, action) => {
+        const { drinkId, reviews } = action.payload;
+        const rootBeer = state.rootBeers.find((beer) => beer.id === drinkId);
+        if (rootBeer) {
+          rootBeer.reviews = reviews;
+        }
+        state.status = "succeeded";
+      })
+      .addCase(fetchReviews.rejected, (state, action) => {
+        state.status = "failed";
         state.error = action.payload;
       });
   },
