@@ -37,7 +37,7 @@ export const uploadPicture = createAsyncThunk(
   async ({ drinkId, image }, { rejectWithValue }) => {
     try {
       const formData = new FormData();
-      formData.append("picture", image);
+      formData.append("file", image);
 
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/api/drinks/${drinkId}/pictures`,
