@@ -41,6 +41,7 @@ const RootBeerCard = ({ rootBeer, reviews, onAddReview, onClick }) => {
       hoverable
       style={{ width: 300 }}
       cover={<img alt={rootBeer.name} src={imageUrl} />}
+      onClick={onClick}
     >
       <Meta title={rootBeer.name} description={rootBeer.description} />
       <div style={{ marginTop: 16 }}>
