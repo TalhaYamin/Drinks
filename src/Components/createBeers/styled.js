@@ -92,3 +92,8 @@ export const FormButton = styled.button`
     background-color: #0056b3;
   }
 `;
+
+export const ErrorMessage = styled.p`
+  color: red;
+  font-size: 0.875em;
+`;

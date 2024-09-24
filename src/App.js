@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import RootBeers from "./Pages";
 import RootBeerDetails from "./Pages/DetailsPage";
+import RootBeers from "./Pages/HomePage";
 
 function App() {
   return (

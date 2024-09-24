@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addRootBeer, uploadPicture } from "../../store/slices/drinkSlice/apis"; // Import uploadPicture
+import { addRootBeer, uploadPicture } from "../../store/slices/drinkSlice/apis";
 import {
   AddButton,
   ModalContainer,
@@ -10,6 +10,7 @@ import {
   FormLabel,
   FormButton,
   CloseButton,
+  ErrorMessage,
 } from "./styled";
 
 const CreateRootBeer = ({ onFormSubmit }) => {
@@ -17,6 +18,7 @@ const CreateRootBeer = ({ onFormSubmit }) => {
   const [formData, setFormData] = useState({ name: "", description: "" });
   const [image, setImage] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     setFormData({
@@ -29,8 +31,23 @@ const CreateRootBeer = ({ onFormSubmit }) => {
     setImage(e.target.files[0]);
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.name) newErrors.name = "Name is required.";
+    if (!formData.description)
+      newErrors.description = "Description is required.";
+    if (!image) newErrors.image = "Image is required.";
+    return newErrors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
 
     try {
       const resultAction = await dispatch(addRootBeer(formData));
@@ -74,6 +91,7 @@ const CreateRootBeer = ({ onFormSubmit }) => {
                     onChange={handleChange}
                     required
                   />
+                  {errors.name && <ErrorMessage>{errors.name}</ErrorMessage>}
                 </div>
                 <div>
                   <FormLabel>Description</FormLabel>
@@ -84,6 +102,9 @@ const CreateRootBeer = ({ onFormSubmit }) => {
                     onChange={handleChange}
                     required
                   />
+                  {errors.description && (
+                    <ErrorMessage>{errors.description}</ErrorMessage>
+                  )}
                 </div>
                 <div>
                   <FormLabel>Upload Image</FormLabel>
@@ -91,7 +112,9 @@ const CreateRootBeer = ({ onFormSubmit }) => {
                     type="file"
                     accept="image/*"
                     onChange={handleImageChange}
+                    required
                   />
+                  {errors.image && <ErrorMessage>{errors.image}</ErrorMessage>}
                 </div>
                 <FormButton type="submit">Create</FormButton>
               </FormContainer>

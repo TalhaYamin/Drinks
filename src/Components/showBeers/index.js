@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom"; // Add this for navigation
+import { useNavigate } from "react-router-dom";
 import {
   getRootBeersError,
   getRootBeersStatus,
   getRootBeersTotal,
   selectAllRootBeers,
 } from "../../store/slices/drinkSlice/selector";
-import { fetchRootBeers } from "../../store/slices/drinkSlice/apis";
-import RootBeerCard from "../rootBeerCard";
+import { addReview, fetchRootBeers } from "../../store/slices/drinkSlice/apis";
 import {
   GridContainer,
   Title,
@@ -18,10 +17,11 @@ import {
   PaginationContainer,
   PaginationButton,
 } from "./styled";
+import RootBeerCard from "../rootBeerCard";
 
 const RootBeersList = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Add this for navigation
+  const navigate = useNavigate();
   const rootBeers = useSelector(selectAllRootBeers);
   const rootBeersStatus = useSelector(getRootBeersStatus);
   const error = useSelector(getRootBeersError);
@@ -99,6 +99,9 @@ const RootBeersList = () => {
               rootBeer={rootBeer}
               reviews={rootBeer.reviews || []}
               onClick={() => handleClick(rootBeer.id)}
+              onAddReview={async (reviewData) => {
+                await dispatch(addReview({ drinkId: rootBeer.id, reviewData }));
+              }}
             />
           ))}
         </GridContainer>
