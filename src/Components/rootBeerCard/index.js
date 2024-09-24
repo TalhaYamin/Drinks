@@ -41,9 +41,18 @@ const RootBeerCard = ({ rootBeer, reviews, onAddReview, onClick }) => {
       hoverable
       style={{ width: 300 }}
       cover={<img alt={rootBeer.name} src={imageUrl} />}
-      onClick={onClick}
     >
-      <Meta title={rootBeer.name} description={rootBeer.description} />
+      <Meta
+        title={
+          <span
+            style={{ cursor: "pointer", color: "Red", fontSize: "18px" }}
+            onClick={onClick}
+          >
+            {rootBeer.name}
+          </span>
+        }
+        description={rootBeer.description}
+      />
       <div style={{ marginTop: 16 }}>
         <p>Reviews: {rootBeer.reviewCount}</p>
         <p>
@@ -55,7 +64,6 @@ const RootBeerCard = ({ rootBeer, reviews, onAddReview, onClick }) => {
           )}
         </p>
       </div>
-
       <Button
         type="primary"
         onClick={toggleReviewForm}
@@ -69,7 +77,6 @@ const RootBeerCard = ({ rootBeer, reviews, onAddReview, onClick }) => {
           </>
         )}
       </Button>
-
       {isReviewOpen && (
         <div style={{ marginTop: 16 }}>
           <Rate
@@ -92,7 +99,6 @@ const RootBeerCard = ({ rootBeer, reviews, onAddReview, onClick }) => {
           </Button>
         </div>
       )}
-
       {reviews?.length > 0 && (
         <List
           style={{ marginTop: 16 }}
